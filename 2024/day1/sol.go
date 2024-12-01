@@ -5,11 +5,10 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"math"
 	"os"
-	"slices"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func Solution() {
@@ -22,7 +21,9 @@ func Solution() {
 
 	scanner := bufio.NewScanner(file)
 
-	left, right := []int{}, []int{}
+	now := time.Now()
+	left := []int{}
+	rightFreq := make(map[int]int)
 	for scanner.Scan() {
 		line := scanner.Text()
 
@@ -30,18 +31,18 @@ func Solution() {
 		one, _ := strconv.Atoi(list[0])
 		two, _ := strconv.Atoi(list[3])
 		left = append(left, one)
-		right = append(right, two)
+		rightFreq[two]++
 	}
 
-	slices.Sort(left)
-	slices.Sort(right)
-
-	sumOfDiff := 0
+	sop := 0
 	for i := 0; i < len(left); i++ {
-		diff := math.Abs(float64(left[i]) - float64(right[i]))
-		sumOfDiff += int(diff)
+		if count, ok := rightFreq[left[i]]; ok {
+			sop += left[i] * count
+		}
 	}
-	fmt.Println(sumOfDiff)
+	fmt.Println(sop)
+	taken := time.Since(now).Microseconds()
+	fmt.Println(taken)
 }
 
 // NOTE: some cool ass feature to read lines from file
