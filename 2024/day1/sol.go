@@ -5,7 +5,11 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"math"
 	"os"
+	"slices"
+	"strconv"
+	"strings"
 )
 
 func Solution() {
@@ -17,10 +21,27 @@ func Solution() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+
+	left, right := []int{}, []int{}
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
+
+		list := strings.Split(line, " ")
+		one, _ := strconv.Atoi(list[0])
+		two, _ := strconv.Atoi(list[3])
+		left = append(left, one)
+		right = append(right, two)
 	}
+
+	slices.Sort(left)
+	slices.Sort(right)
+
+	sumOfDiff := 0
+	for i := 0; i < len(left); i++ {
+		diff := math.Abs(float64(left[i]) - float64(right[i]))
+		sumOfDiff += int(diff)
+	}
+	fmt.Println(sumOfDiff)
 }
 
 // NOTE: some cool ass feature to read lines from file
