@@ -26,18 +26,15 @@ func Solution() {
 	fmt.Println(inorderSum)
 }
 
-func inorder(jobs [][]int, before map[int][]int) int {
+func inorder(jobs [][]int, before map[int]map[int]bool) int {
 	middleSum := 0
 	for _, job := range jobs {
 		outoforder := false
 		for i, page := range job {
-		each:
 			for j := i + 1; j < len(job); j++ {
-				for _, bef := range before[page] {
-					if bef == job[j] {
-						outoforder = true
-						break each
-					}
+				if ok := before[page][job[j]]; ok {
+					outoforder = true
+					break
 				}
 			}
 		}
@@ -48,11 +45,15 @@ func inorder(jobs [][]int, before map[int][]int) int {
 	return middleSum
 }
 
-func getorders(orders [][]int) map[int][]int {
-	before := make(map[int][]int)
+func getorders(orders [][]int) map[int]map[int]bool {
+	before := make(map[int]map[int]bool)
 	for _, ord := range orders {
 		first, second := ord[0], ord[1]
-		before[second] = append(before[second], first)
+		// before[second] = append(before[second], first)
+		if before[second] == nil {
+			before[second] = make(map[int]bool)
+		}
+		before[second][first] = true
 	}
 	return before
 }
