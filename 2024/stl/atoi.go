@@ -22,7 +22,7 @@ func IntsFromString(line string) []int {
 			neg = true
 		}
 
-		if (ch == ' ' || ch == ',' || ch == ';') && builder.Len() != 0 {
+		if (ch == ' ' || ch == ',' || ch == ';' || ch == '|') && builder.Len() != 0 {
 			num, err := strconv.ParseInt(builder.String(), 10, 64)
 			if err != nil {
 				panic(err)
