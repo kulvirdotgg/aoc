@@ -10,26 +10,30 @@ func Solution() {
 
 	topoMap := stl.MatrixFromString(ip)
 	trails := 0
+	ratings := 0
 	for r := range topoMap {
 		for c := range topoMap {
 			if topoMap[r][c] == 0 {
-				trails += bfs(topoMap, r, c)
+				trail, rating := bfs(topoMap, r, c)
+				ratings += rating
+				trails += trail
 			}
 		}
 	}
-	fmt.Println(trails)
+	fmt.Println(trails, ratings)
 }
 
 type point struct {
 	x, y int
 }
 
-func bfs(topoMap [][]int64, r, c int) int {
+func bfs(topoMap [][]int64, r, c int) (int, int) {
 	rows, cols := len(topoMap), len(topoMap[0])
 
 	dirs := [][]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
 
 	uniqEnds := make(map[point]struct{})
+	rating := 0
 
 	q := [][]int{}
 	pt := []int{r, c}
@@ -40,8 +44,8 @@ func bfs(topoMap [][]int64, r, c int) int {
 		q = q[1:]
 
 		if topoMap[pos[0]][pos[1]] == 9 {
-			// fmt.Println(topoMap[pos[0]][pos[1]], pos)
 			uniqEnds[point{x: pos[0], y: pos[1]}] = struct{}{}
+			rating++
 			continue
 		}
 
@@ -58,5 +62,5 @@ func bfs(topoMap [][]int64, r, c int) int {
 			}
 		}
 	}
-	return len(uniqEnds)
+	return len(uniqEnds), rating
 }
