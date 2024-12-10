@@ -55,3 +55,20 @@ func IntsFromString(line string) []int {
 
 	return array
 }
+
+func MatrixFromString(ip []string) [][]int64 {
+	matrix := [][]int64{}
+
+	var builder strings.Builder
+	for _, line := range ip {
+		arr := []int64{}
+		for _, data := range line {
+			builder.WriteRune(data)
+			num, _ := strconv.ParseInt(builder.String(), 10, 64)
+			arr = append(arr, num)
+			builder.Reset()
+		}
+		matrix = append(matrix, arr)
+	}
+	return matrix
+}
