@@ -43,9 +43,8 @@ func moreBlinks(ip []int, blinks int) uint64 {
 	}
 
 	for range blinks {
-		updatedDp := dp
-		for stone := range dp {
-			cnt := dp[stone]
+		updatedDp := make(map[int]uint64)
+		for stone, cnt := range dp {
 			switch {
 			case stone == 0:
 				updatedDp[1] += cnt
