@@ -15,6 +15,9 @@ func Solution() {
 
 	safety := safetyFactor(pv)
 	fmt.Println(safety)
+
+	seconds := christmasTree(pv)
+	fmt.Println(seconds)
 }
 
 const (
@@ -22,14 +25,24 @@ const (
 	H = 103
 )
 
-func easterEgg(pv [][]int) int {
+func christmasTree(pv [][]int) int {
 	seconds := 0
 	for {
-		for _, robot := range pv {
-			fmt.Println(robot)
+		pts := make(map[[2]int]bool)
+		for i, robot := range pv {
+			px, py := robot[0], robot[1]
+			vx, vy := robot[2], robot[3]
+			px = (px + vx + W) % W
+			py = (py + vy + H) % H
+
+			pt := [2]int{px, py}
+			pts[pt] = true
+			pv[i][0], pv[i][1] = px, py
 		}
 		seconds++
-		break
+		if len(pts) == len(pv) {
+			break
+		}
 	}
 	return seconds
 }
