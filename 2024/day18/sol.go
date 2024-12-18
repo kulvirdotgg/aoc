@@ -23,13 +23,41 @@ func Solution() {
 	for _, line := range ip {
 		pos := stl.IntsFromString(line)
 		matrix[pos[0]][pos[1]] = "#"
-		canReach := bfs(matrix)
-
-		if canReach == -1 {
+		if bfs(matrix) == -1 {
 			fmt.Println(pos)
 			break
 		}
+
+		// if dfs(matrix, 0, 0) == -1 {
+		// 	fmt.Println(pos)
+		// 	break
+		// }
 	}
+}
+
+var (
+	dirs    [][]int    = [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+	visited [N][M]bool = [N][M]bool{}
+)
+
+func dfs(matrix [N][M]string, r, c int) int {
+	visited[r][c] = true
+
+	if r == N-1 && c == M-1 {
+		return 1
+	}
+
+	for _, dir := range dirs {
+		dx, dy := dir[0], dir[1]
+		nr, nc := r+dx, c+dy
+
+		if nr >= 0 && nr < N && nc >= 0 && nc < M && !visited[nr][nc] && matrix[nr][nc] != "#" {
+			if dfs(matrix, nr, nc) == 1 {
+				return 1
+			}
+		}
+	}
+	return -1
 }
 
 func bfs(matrix [N][M]string) int {
