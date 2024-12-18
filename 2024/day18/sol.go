@@ -13,14 +13,23 @@ const (
 func Solution() {
 	ip := stl.ReadFile("input.txt")
 
-	bytePos := [][]int{}
+	matrix := [N][M]string{}
+	for i := range N {
+		for j := range M {
+			matrix[i][j] = "."
+		}
+	}
+
 	for _, line := range ip {
 		pos := stl.IntsFromString(line)
-		bytePos = append(bytePos, pos)
+		matrix[pos[0]][pos[1]] = "#"
+		canReach := bfs(matrix)
+
+		if canReach == -1 {
+			fmt.Println(pos)
+			break
+		}
 	}
-	matrix := constructMap(bytePos[:1024])
-	minSteps := bfs(matrix)
-	fmt.Println(minSteps)
 }
 
 func bfs(matrix [N][M]string) int {
