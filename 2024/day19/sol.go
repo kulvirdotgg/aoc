@@ -17,30 +17,48 @@ func Solution() {
 	patterns := ip[2:]
 
 	count := 0
+	totalCount := 0
+	dp := make(map[string]int)
 	for _, pattern := range patterns {
-		curr := ""
-		if form(pattern, curr, avail) {
+		if form(pattern, 0, avail) {
 			count++
 		}
+		totalCount += formWithCount(pattern, avail, dp)
 	}
 	fmt.Println(count)
+	fmt.Println(totalCount)
 }
 
-func form(target, curr string, avail []string) bool {
-	if len(curr) > len(target) {
-		return false
-	}
-	if curr == target {
+func form(target string, idx int, avail []string) bool {
+	if idx == len(target) {
 		return true
 	}
+
 	for _, s := range avail {
-		i, j := len(curr), len(s)
-		if len(s) <= len(target[i:]) && target[i:i+j] == s {
-			newS := curr + s
-			if form(target, newS, avail) {
+		if strings.HasPrefix(target[idx:], s) {
+			if form(target, idx+len(s), avail) {
 				return true
 			}
 		}
 	}
 	return false
+}
+
+func formWithCount(target string, avail []string, dp map[string]int) int {
+	if val, ok := dp[target]; ok {
+		return val
+	}
+
+	total := 0
+	for _, s := range avail {
+		if strings.Index(target, s) == 0 {
+			if len(s) == len(target) {
+				total++
+				continue
+			}
+			total += formWithCount(target[len(s):], avail, dp)
+		}
+	}
+	dp[target] = total
+	return total
 }
