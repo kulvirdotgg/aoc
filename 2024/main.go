@@ -1,7 +1,7 @@
 package main
 
 import (
-	sol "aoc/day19"
+	sol "aoc/day25"
 )
 
 func main() {
