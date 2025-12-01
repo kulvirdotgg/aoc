@@ -12,6 +12,7 @@ func Solution() {
 	ip := stl.ReadFile("input.txt")
 	zeroCounts := crackPassword(ip)
 
+	zeroCounts = crackPasswordNewMethod(ip)
 	fmt.Println(zeroCounts)
 }
 
@@ -40,5 +41,33 @@ func crackPassword(doc []string) (zeroCount int) {
 		}
 	}
 
+	return zeroCount
+}
+
+func crackPasswordNewMethod(doc []string) (zeroCount int) {
+	var dialPos, ticksOnSafe int64 = 50, 100
+
+	for _, rotation := range doc {
+		dir, ticks := rotation[0], rotation[1:]
+
+		ticksCount, err := strconv.ParseInt(ticks, 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
+		for range ticksCount {
+			switch dir {
+			case 'L':
+				dialPos = (dialPos - 1 + ticksOnSafe) % ticksOnSafe
+			case 'R':
+				dialPos = (dialPos + 1) % ticksOnSafe
+			}
+
+			if dialPos == 0 {
+				zeroCount++
+			}
+		}
+
+	}
 	return zeroCount
 }
