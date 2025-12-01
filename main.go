@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
+	sol "aoc/2025/day1"
 )
 
 func main() {
-	fmt.Println("this is main")
+	sol.Solution()
 }
