@@ -1,3 +1,4 @@
 *.DS_Store
 **.mypy_cache
 **input.txt
+example.txt
