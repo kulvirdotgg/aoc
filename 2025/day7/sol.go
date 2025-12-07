@@ -12,6 +12,9 @@ func Solution() {
 
 	splits := countBeamSplits(ip)
 	fmt.Printf("Tachyon beam split: %d times\n", splits)
+
+	beams := countBeams(ip)
+	fmt.Printf("Total paths taken by Tachyon beam: %d times\n", beams)
 }
 
 func countBeamSplits(grid []string) (splits int) {
@@ -24,6 +27,10 @@ func countBeamSplits(grid []string) (splits int) {
 
 	var dfs func(row, col int)
 	dfs = func(row, col int) {
+		if nr <= row {
+			return
+		}
+
 		if visited[row][col] {
 			return
 		}
@@ -31,20 +38,45 @@ func countBeamSplits(grid []string) (splits int) {
 		visited[row][col] = true
 		if grid[row][col] == '^' {
 			splits++
-			if row+1 < nr {
-				dfs(row+1, col-1)
-				dfs(row+1, col+1)
-			}
+			dfs(row+1, col-1)
+			dfs(row+1, col+1)
 		} else {
-			if row+1 < nr {
-				dfs(row+1, col)
-			}
+			dfs(row+1, col)
 		}
 	}
 
-	// 0, 7 is starting point in the example
-	// 0, 70 is starting point in the example
 	dfs(0, 70)
 
 	return splits
+}
+
+func countBeams(grid []string) (beams int) {
+	nr, nc := len(grid), len(grid[0])
+
+	visited := make([][]int, 0, nr)
+	for range nr {
+		visited = append(visited, make([]int, nc))
+	}
+
+	var dfs func(row, col int) int
+	dfs = func(row, col int) int {
+		if nr <= row {
+			return 1
+		}
+
+		if visited[row][col] != 0 {
+			return visited[row][col]
+		}
+
+		if grid[row][col] == '^' {
+			visited[row][col] = dfs(row+1, col-1) + dfs(row+1, col+1)
+		} else {
+			visited[row][col] = dfs(row+1, col)
+		}
+		return visited[row][col]
+	}
+
+	beams = dfs(0, 70)
+
+	return beams
 }
