@@ -10,39 +10,41 @@ func Solution() {
 	ip := stl.ReadFile("input.txt")
 	// ip := stl.ReadFile("example.txt")
 
-	splits := countSplits(ip)
+	splits := countBeamSplits(ip)
 	fmt.Printf("Tachyon beam split: %d times\n", splits)
 }
 
-func countSplits(grid []string) (splits int) {
-	numRows := len(grid)
+func countBeamSplits(grid []string) (splits int) {
+	nr, nc := len(grid), len(grid[0])
 
-	tachyonBeams := [][]int{{70, 0}} // beamCol: startingRow
+	visited := make([][]bool, 0, nr)
+	for range nr {
+		visited = append(visited, make([]bool, nc))
+	}
 
-	for len(tachyonBeams) > 0 {
-		// there might be overlapping beams
-		next := make(map[int]int)
-		for _, cr := range tachyonBeams {
-			col, row := cr[0], cr[1]
-
-			if numRows <= row+1 {
-				continue
-			}
-
-			if grid[row][col] == '^' {
-				splits++
-
-				next[col+1] = row + 1
-				next[col-1] = row + 1
-			} else {
-				next[col] = row + 1
-			}
+	var dfs func(row, col int)
+	dfs = func(row, col int) {
+		if visited[row][col] {
+			return
 		}
 
-		tachyonBeams = [][]int{}
-		for c, r := range next {
-			tachyonBeams = append(tachyonBeams, []int{c, r})
+		visited[row][col] = true
+		if grid[row][col] == '^' {
+			splits++
+			if row+1 < nr {
+				dfs(row+1, col-1)
+				dfs(row+1, col+1)
+			}
+		} else {
+			if row+1 < nr {
+				dfs(row+1, col)
+			}
 		}
 	}
+
+	// 0, 7 is starting point in the example
+	// 0, 70 is starting point in the example
+	dfs(0, 70)
+
 	return splits
 }
