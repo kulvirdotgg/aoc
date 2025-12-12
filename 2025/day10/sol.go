@@ -15,6 +15,9 @@ func Solution() {
 
 	ways := countWays(adj)
 	fmt.Printf("total number of way from 'you' to 'out': %d\n", ways)
+
+	ways = countWaysWithDAC(adj)
+	fmt.Printf("total number of way from 'srv' to 'out' with 'dac and 'fft': %d\n", ways)
 }
 
 func countWays(adj map[string][]string) (ways int) {
@@ -39,6 +42,37 @@ func countWays(adj map[string][]string) (ways int) {
 	}
 
 	ways = dfs("you")
+	return
+}
+
+func countWaysWithDAC(adj map[string][]string) (ways int) {
+	visited := make(map[string]int)
+
+	var dfs func(node string, dac bool, fft bool) int
+	dfs = func(node string, dac bool, fft bool) int {
+		key := fmt.Sprintf("%s:%v%v", node, dac, fft)
+
+		if cnt, ok := visited[key]; ok {
+			return cnt
+		}
+
+		if node == "out" {
+			// it will be valid path only if both "fft" and "dac" nodes
+			if dac && fft {
+				visited[key] = 1
+				return 1
+			}
+			visited[key] = 0
+			return 0
+		}
+
+		for _, conn := range adj[node] {
+			visited[key] += dfs(conn, dac || conn == "dac", fft || conn == "fft")
+		}
+		return visited[key]
+	}
+
+	ways = dfs("svr", false, false)
 	return
 }
 
